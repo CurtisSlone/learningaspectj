@@ -1,16 +1,23 @@
 package com.aop.aspects;
 
-import com.aop.MessageCommunicator;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+
 import com.aop.Authenticator;
 
-public aspect SecurityAspect {
-    private Authenticator authenticator = new Authenticator();
+@Aspect
+public class SecurityAspect {
+  private Authenticator authenticator = new Authenticator();
 
-	pointcut secureAccess()
-        : execution(* MessageCommunicator.deliver(..));
+  @Pointcut("execution(* com.aop.MessageCommunicator.deliver(..))")
+  public void secureAccess(){
+	
+  }
 
-	before() : secureAccess() {
-		System.out.println("Checking and authenticating user");
-		authenticator.authenticate();
-	}
+  @Before("secureAccess()")
+  public void secure(){
+	System.out.println("Checking and authenticating user");
+	authenticator.authenticate();
+  }
 }
